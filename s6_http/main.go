@@ -1,20 +1,31 @@
 package main
 
-import (
-	"fmt"
-	"log"
-	"net/http"
-)
+type logWriter struct{}
+
+func (logWriter) Write(bs []byte) (int, error) {
+	println(string(bs))
+	return len(bs), nil
+}
 
 func main() {
-	resp, err := http.Get("https://google.com")
-	if err != nil {
-		log.Fatal("Error", err)
+	// resp, err := http.Get("https://google.com")
+	// if err != nil {
+	// 	log.Fatal("Error", err)
+	// }
+
+	// lw := logWriter{}
+
+	// io.Copy(lw, resp.Body)
+
+	// defer resp.Body.Close()
+
+	s := square{
+		sideLength: 2.0,
 	}
-	p := make([]byte, 100000)
-	_, err = resp.Body.Read(p)
-	if err != nil {
-		log.Fatal("Error", err)
+	t := triangle{
+		height: 2.0,
+		base:   3.0,
 	}
-	fmt.Println(string(p))
+	printArea(s)
+	printArea(t)
 }
