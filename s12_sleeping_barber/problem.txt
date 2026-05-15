@@ -1,0 +1,53 @@
+# The Sleeping Barber Problem
+
+A classic synchronization problem introduced by Edsger Dijkstra in 1965. Your job is to implement it in Go using goroutines and channels (or sync primitives if you prefer).
+
+## The Setup
+
+A barbershop has:
+- **One barber** with one barber chair
+- **A waiting room** with `N` chairs (let's say `N = 5`)
+- **Customers** arriving at random intervals
+
+## The Rules
+
+1. If there are **no customers**, the barber sits in the barber chair and falls asleep.
+2. When a customer arrives and the barber is sleeping, the customer **wakes the barber up** and gets a haircut.
+3. If the barber is already cutting hair when a customer arrives:
+   - If there's a free chair in the waiting room → the customer **sits and waits**.
+   - If all waiting room chairs are full → the customer **leaves the shop** (lost customer).
+4. After finishing a haircut, the barber checks the waiting room:
+   - If someone is waiting → call the next customer in.
+   - If empty → go back to sleep in the barber chair.
+
+## Your Task
+
+Write a Go program that simulates this scenario. Your simulation should:
+
+1. Run for some bounded amount of time (e.g., simulate 20–30 customer arrivals, or run for a fixed duration like 10 seconds).
+2. Have customers arrive at **random intervals** (e.g., every 100–600ms).
+3. Have haircuts take a **random amount of time** (e.g., 300–800ms).
+4. Print log messages showing the state changes, for example:
+   ```
+   [Customer 3] arrived
+   [Customer 3] sat in waiting room (2/5 occupied)
+   [Barber] finished haircut, calling next customer
+   [Customer 7] arrived, waiting room full — leaving
+   [Barber] no customers, going to sleep
+   ```
+5. At the end, print summary stats: total customers served, total customers turned away.
+
+## Constraints / Things to Get Right
+
+- **No race conditions.** Multiple customers may arrive simultaneously; access to the waiting room count must be safe.
+- **No busy-waiting.** The barber should genuinely block/sleep when there are no customers, not spin in a loop checking.
+- **Deadlock-free.** The program should terminate cleanly when the simulation ends.
+- **Fairness is not required**, but customers shouldn't be lost while seats are available.
+
+## Stretch Goals (optional)
+
+- Multiple barbers sharing one waiting room.
+- A customer who, after waiting too long, gives up and leaves.
+- Graceful shutdown via `context.Context`.
+
+Good luck — ping me when you want feedback on your solution, or if you get stuck on a specific piece (without me giving away the whole answer).
